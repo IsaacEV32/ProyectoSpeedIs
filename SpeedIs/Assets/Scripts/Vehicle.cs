@@ -65,11 +65,10 @@ public class Vehicle : MonoBehaviour
             isPressedSpace = false;
             rb.AddForce(transform.forward * (-rb.linearVelocity.z), ForceMode.Force);
         }
-        Debug.Log("Actual Key: " + actualKey);
-        Debug.Log("Last Key: " + lastKey);
     }
     private void FixedUpdate()
     {
+        Debug.Log(rb.linearVelocity);
         if (currentSpeed < speedMax && (isPressedForward || isPressedBack) && actualKey == lastKey)
         {
             currentSpeed += 1;
@@ -97,11 +96,15 @@ public class Vehicle : MonoBehaviour
             }
         }
         transform.rotation *= Quaternion.Euler(directionRotacion.normalized * speedRotation);
-        rb.AddForce(transform.right * direction.normalized.x * currentSpeed, ForceMode.Force);
+        rb.AddForce(transform.right * direction.normalized.x * currentSpeed - rb.linearVelocity, ForceMode.Force);
         //Aqui esta la logica del derrape
         if (isPressedSpace)
         {
-            rb.AddForce(transform.forward * -directionRotacion.normalized.y * 10, ForceMode.Force);
+            rb.AddForce(transform.forward * -directionRotacion.normalized.y * 10 - rb.linearVelocity, ForceMode.Force);
         }
+    }
+    internal void AddBoostOfSpeed(Transform directionOfBooster)
+    {
+        rb.AddForce(directionOfBooster.forward * 20, ForceMode.Impulse);
     }
 }
