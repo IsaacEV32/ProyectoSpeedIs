@@ -13,6 +13,7 @@ public class Vehicle : MonoBehaviour
     bool isPressedRight = false;
     bool isPressedLeft = false;
     bool isPressedBack = false;
+    bool isPressedSpace = false;
     KeyCode lastKey = KeyCode.None;
     KeyCode actualKey = KeyCode.None;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -54,6 +55,16 @@ public class Vehicle : MonoBehaviour
         {
             lastKey = KeyCode.S;
         }
+        //Aqui esta el control del derrape
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isPressedSpace = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
+            isPressedSpace = false;
+            rb.AddForce(transform.forward * (-rb.linearVelocity.z), ForceMode.Force);
+        }
         Debug.Log("Actual Key: " + actualKey);
         Debug.Log("Last Key: " + lastKey);
     }
@@ -87,5 +98,10 @@ public class Vehicle : MonoBehaviour
         }
         transform.rotation *= Quaternion.Euler(directionRotacion.normalized * speedRotation);
         rb.AddForce(transform.right * direction.normalized.x * currentSpeed, ForceMode.Force);
+        //Aqui esta la logica del derrape
+        if (isPressedSpace)
+        {
+            rb.AddForce(transform.forward * -directionRotacion.normalized.y * 10, ForceMode.Force);
+        }
     }
 }
