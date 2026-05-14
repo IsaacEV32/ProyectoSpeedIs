@@ -1,16 +1,13 @@
 using UnityEngine;
 
 public class Goal : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+{ 
+    private void OnTriggerEnter(Collider collision)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (collision.TryGetComponent<Vehicle>(out Vehicle player) && GameManager.instance.GetCheckPoints() >= GameManager.instance.GetTotalCheckPoints())
+        {
+            GameManager.instance.SumLap();
+            GameManager.instance.ResetEveryCheckpoint();
+        }
     }
 }
