@@ -63,7 +63,8 @@ public class Vehicle : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.Space))
         {
             isPressedSpace = false;
-            rb.AddForce(transform.forward * (-rb.linearVelocity.z), ForceMode.Force);
+            float lateralVelocity = Vector3.Dot(rb.linearVelocity, transform.forward);
+            rb.AddForce(-transform.forward * lateralVelocity * 0.2f, ForceMode.Force);
         }
     }
     private void FixedUpdate()
@@ -100,11 +101,13 @@ public class Vehicle : MonoBehaviour
         //Aqui esta la logica del derrape
         if (isPressedSpace)
         {
-            rb.AddForce(transform.forward * -directionRotacion.normalized.y * 10 - rb.linearVelocity, ForceMode.Force);
+            float lateralVelocity = Vector3.Dot(rb.linearVelocity, transform.forward);
+            rb.AddForce(-transform.forward * lateralVelocity * 0.2f, ForceMode.Force);
+            rb.AddTorque(Vector3.up * directionRotacion.y * 1.5f * currentSpeed - rb.linearVelocity);
         }
     }
     internal void AddBoostOfSpeed(Transform directionOfBooster)
     {
-        rb.AddForce(directionOfBooster.forward * 20, ForceMode.Impulse);
+        rb.AddForce(directionOfBooster.forward * 50, ForceMode.Impulse);
     }
 }
